@@ -15,98 +15,51 @@
  */
 
 #include QMK_KEYBOARD_H
+#include "keymap_german.h"
+
+enum custom_keycodes {
+    MB_LBRC = SAFE_RANGE,
+    MB_RBRC,
+};
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case MB_LBRC:
+            if (record->event.pressed) {
+                // when keycode MB_LBRC is pressed
+                SEND_STRING("{}" SS_TAP(X_LEFT));
+            }
+            break;
+
+        case MB_RBRC:
+            if (record->event.pressed) {
+                // when keycode MB_RBRC is pressed
+                SEND_STRING("}");
+            } else {
+                // when keycode MB_RBRC is released
+            }
+            break;
+    }
+
+#ifdef CONSOLE_ENABLE
+    uprintf("KL: kc: 0x%04X, col: %u, row: %u, pressed: %b, time: %u, interrupt: %b, count: % u\n ", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
+#endif
+    return true;
+};
 
 #define DVORAK 0 // Base Dvorak
 #define QWERTZ 2 // qwertz
-/****************************************************************************************************
-*
-* Keymap: DefaultLayer in Qwerty
-*
-* ,-------------------------------------------------------------------------------------------------------------------.
-* | Esc    |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |  F8  |  F9  |  F10 |  F12 | PSCR | SLCK | PAUS |  FN0 |  BOOT  |
-* |--------+------+------+------+------+------+---------------------------+------+------+------+------+------+--------|
-* | +=     |  1!  |  2@  |  3#  |  4$  |  5%  |                           |  6^  |  7&  |  8*  |  9(  |  0)  | -_     |
-* |--------+------+------+------+------+------|                           +------+------+------+------+------+--------|
-* | Tab    |   "  |   ,  |  .   |   p  |   y  |                           |   f  |   g  |   c  |   r  |  l   | \|     |
-* |--------+------+------+------+------+------|                           |------+------+------+------+------+--------|
-* | Esc    |   a  |   o  |   e  |   u  |   i  |                           |   d  |   h  |   t  |   n  |  s   | '"     |
-* |--------+------+------+------+------+------|                           |------+------+------+------+------+--------|
-* | Shift  |   ;  |   q  |   j  |   k  |   x  |                           |   b  |   m  |  w   |  v   |  z   | Shift  |
-* `--------+------+------+------+------+-------                           `------+------+------+------+------+--------'
-*          | `~   | INS  | Left | Right|                                         | Up   | Down |  [{  |  ]}  |
-*          `---------------------------'                                         `---------------------------'
-*                                        ,-------------.         ,-------------.
-*                                        | Ctrl | Alt  |         | Gui  | Ctrl |
-*                                 ,------|------|------|         |------+------+------.
-*                                 |      |      |  |         | PgUp |      |      |
-*                                 | BkSp | Del  |------|         |------|Return| Space|
-*                                 |      |      | End  |         | PgDn |      |      |
-*                                 `--------------------'         `--------------------'
-*
-* Keymap: Layer in Qwerty
-*
-* ,-------------------------------------------------------------------------------------------------------------------.
-* | Esc    |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |  F8  |  F9  |  F10 |  F12 | PSCR | SLCK | PAUS |  FN0 |  BOOT  |
-* |--------+------+------+------+------+------+---------------------------+------+------+------+------+------+--------|
-* | =+     |  1!  |  2@  |  3#  |  4$  |  5%  |                           |  6^  |  7&  |  8*  |  9(  |  0)  | -_     |
-* |--------+------+------+------+------+------|                           +------+------+------+------+------+--------|
-* | Tab    |   Q  |   W  |   E  |   R  |   T  |                           |   Y  |   U  |   I  |   O  |   P  | \|     |
-* |--------+------+------+------+------+------|                           |------+------+------+------+------+--------|
-* | Caps   |   A  |   S  |   D  |   F  |   G  |                           |   H  |   J  |   K  |   L  |  ;:  | '"     |
-* |--------+------+------+------+------+------|                           |------+------+------+------+------+--------|
-* | Shift  |   Z  |   X  |   C  |   V  |   B  |                           |   N  |   M  |  ,.  |  .>  |  /?  | Shift  |
-* `--------+------+------+------+------+-------                           `------+------+------+------+------+--------'
-*          | `~   | INS  | Left | Right|                                         | Up   | Down |  [{  |  ]}  |
-*          `---------------------------'                                         `---------------------------'
-*                                        ,-------------.         ,-------------.
-*                                        | Ctrl | Alt  |         | Gui  | Ctrl |
-*                                 ,------|------|------|         |------+------+------.
-*                                 |      |      | LGUI |         | PgUp |      |      |
-*                                 | BkSp | Del  |------|         |------|Return| Space|
-*                                 |      |      | End  |         | PgDn |      |      |
-*                                 `--------------------'         `--------------------'
-*/
 
-const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-[DVORAK] = LAYOUT(
-           KC_EQL , KC_F1   ,KC_F2   ,KC_F3   ,KC_F4   ,KC_F5  ,KC_F6  ,KC_F7  ,KC_F8,
-           KC_LBRC, KC_1    ,KC_2    ,KC_3    ,KC_4    ,KC_5   ,
-           KC_TAB , KC_QUOT ,KC_COMM ,KC_DOT  ,KC_P    ,KC_Y   ,
-           KC_ESC , KC_A    ,KC_O    ,KC_E    ,KC_U    ,KC_I   ,
-           KC_LSFT, KC_SCLN ,KC_Q    ,KC_J    ,KC_K    ,KC_X   ,
-                    KC_GRV  ,KC_INS  ,KC_LEFT ,KC_RGHT ,
-              KC_LCTL, KC_LALT,
-                                   MO(QWERTZ),
-                          KC_BSPC, KC_DEL, KC_END,
-    KC_F9  ,KC_F10 ,KC_F11 ,KC_F12 ,KC_PSCR ,KC_SLCK  ,KC_PAUS, KC_NO, RESET,
-    KC_6   ,KC_7   ,KC_8   ,KC_9   ,KC_0    ,KC_MINS  ,
-    KC_F   ,KC_G   ,KC_C   ,KC_R   ,KC_L    ,KC_SLSH  ,
-    KC_D   ,KC_H   ,KC_T   ,KC_N   ,KC_S    ,KC_MINS  ,
-    KC_B   ,KC_M   ,KC_W   ,KC_V   ,KC_Z    ,KC_RSFT  ,
-    KC_UP  ,KC_DOWN,KC_LBRC,KC_RBRC,
-           KC_LWIN,KC_RALT,
-           KC_PGUP,
-           KC_PGDN,KC_ENTER ,KC_SPC
-  ),
+const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {[DVORAK] = LAYOUT(KC_EQL, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, ALGR(DE_7), KC_1, KC_2, KC_3, KC_4, KC_5, KC_TAB, KC_QUOT, KC_COMM, KC_DOT, KC_P, DE_Y, KC_ESC, KC_A, KC_O, KC_E, KC_U, KC_I, KC_LSFT, DE_SCLN, KC_Q, KC_J, KC_K, KC_X, KC_GRV, KC_INS, KC_LEFT, KC_RGHT, KC_LCTL, KC_LALT, TO(QWERTZ), KC_BSPC, KC_DEL, KC_END, KC_F9, KC_F10, KC_F11, KC_F12, KC_PSCR, KC_SLCK, KC_PAUS, KC_NO, RESET, KC_6, KC_7, KC_8, KC_9, KC_0, KC_RBRC, KC_F, KC_G, KC_C, KC_R, KC_L, KC_SLSH, KC_D, KC_H, KC_T, KC_N, KC_S, DE_MINS, KC_B, KC_M, KC_W, KC_V, DE_Z, KC_RSFT, KC_UP, KC_DOWN, MB_LBRC, MB_RBRC, KC_LWIN, KC_RALT, KC_PGUP, KC_PGDN, KC_ENTER, KC_SPC),
 
-[QWERTZ] = LAYOUT(
-           KC_DEL, KC_F1  ,KC_F2  ,KC_F3  ,KC_F4  ,KC_F5  ,KC_F6  ,KC_F7  ,KC_F8,
-           KC_EQL, KC_1   ,KC_2   ,KC_3   ,KC_4   ,KC_5   ,
-           KC_TAB, KC_Q   ,KC_W   ,KC_E   ,KC_R   ,KC_T   ,
-           KC_CAPS,KC_A   ,KC_S   ,KC_D   ,KC_F   ,KC_G   ,
-           KC_LSFT,KC_Y   ,KC_X   ,KC_C   ,KC_V   ,KC_B   ,
-                   KC_GRV ,KC_INS ,KC_LEFT,KC_RGHT,
-         KC_LCTL,KC_LALT,
-                                    MO(DVORAK),
-                          KC_BSPC, KC_DEL, KC_END,
-    KC_F9  ,KC_F10 ,KC_F11 ,KC_F12 ,KC_PSCR ,KC_SLCK  ,KC_PAUS, KC_NO, RESET,
-  KC_6   ,KC_7   ,KC_8   ,KC_9   ,KC_0   ,KC_MINS,
-  KC_Z   ,KC_U   ,KC_I   ,KC_O   ,KC_P   ,KC_BSLS,
-  KC_H   ,KC_J   ,KC_K   ,KC_L   ,KC_SCLN,KC_QUOT,
-  KC_N   ,KC_M   ,KC_COMM,KC_DOT ,KC_SLSH,KC_RSFT,
-    KC_UP  ,KC_DOWN,KC_LBRC,KC_RBRC,
-           KC_LWIN,KC_RALT,
-           KC_PGUP,
-           KC_PGDN,KC_ENTER ,KC_SPC
-    )
-};
+                                                              [QWERTZ] = LAYOUT(KC_DEL, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_EQL, KC_1, KC_2, KC_3, KC_4, KC_5, KC_TAB, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_ESCAPE, KC_A, KC_S, KC_D, KC_F, KC_G, KC_LSFT, DE_Y, KC_X, KC_C, KC_V, KC_B, KC_GRV, KC_INS, KC_LEFT, KC_RGHT, KC_LCTL, KC_LALT, TO(DVORAK), KC_BSPC, KC_DEL, KC_END, KC_F9, KC_F10, KC_F11, KC_F12, KC_PSCR, KC_SLCK, KC_PAUS, KC_NO, RESET, KC_6, KC_7, KC_8, KC_9, KC_0, KC_MINS, DE_Z, KC_U, KC_I, KC_O, KC_P, KC_BSLS, KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_QUOT, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RSFT, KC_UP, KC_DOWN, KC_LBRC, KC_RBRC, KC_LWIN, KC_RALT, KC_PGUP, KC_PGDN, KC_ENTER, KC_SPC)};
+
+/* const key_override_t end_key_override  = ko_make_basic(MOD_MASK_SHIFT, KC_END, KC_HOME); */
+/* const key_override_t scln_key_override = ko_make_basic(MOD_MASK_SHIFT, DE_SCLN, DE_COLN); */
+/* const key_override_t lbrc_key_override = ko_make_basic(MOD_MASK_SHIFT, ALGR(DE_7), DE_LCBR); */
+/* const key_override_t rbrc_key_override = ko_make_basic(MOD_MASK_SHIFT, ALGR(DE_8), DE_RCBR); */
+
+/* // This globally defines all key overrides to be used */
+/* const key_override_t **key_overrides = (const key_override_t *[]){ */
+/*     &end_key_override, &scln_key_override, &lbrc_key_override, &rbrc_key_override, */
+/*     NULL // Null terminate the array of overrides! */
+/* }; */
