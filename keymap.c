@@ -16,6 +16,15 @@
 
 #include QMK_KEYBOARD_H
 #include "keymap_german.h"
+#include "features/custom_shift_keys.h"
+
+const custom_shift_key_t custom_shift_keys[] = {
+    {KC_DOT, KC_QUES},  // Shift . is ?
+    {KC_COMM, KC_EXLM}, // Shift , is !
+    {KC_MINS, KC_EQL},  // Shift - is =
+    {KC_COLN, KC_SCLN}, // Shift : is ;
+};
+uint8_t NUM_CUSTOM_SHIFT_KEYS = sizeof(custom_shift_keys) / sizeof(custom_shift_key_t);
 
 enum custom_keycodes {
     MB_LBRC = SAFE_RANGE,

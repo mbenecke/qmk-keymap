@@ -13,3 +13,7 @@ SLEEP_LED_ENABLE = no       # Breathing sleep LED during USB suspend
 # Userspace defines
 KEY_OVERRIDE_ENABLE = yes
 GERMAN_ENABLE = yes             # Enable Custom US Ansi Keycodes for PC with German set as input language
+
+
+# https://getreuer.info/posts/keyboards/custom-shift-keys/index.html
+SRC += features/custom_shift_keys.c # enable custom shift
