@@ -110,6 +110,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             break;
+
+        case KC_7:
+            if (record->event.pressed) {
+                if (mod_state & MOD_MASK_SHIFT) {
+                    del_mods(MOD_MASK_SHIFT);
+                    SEND_STRING("&");
+                    set_mods(mod_state);
+                    return false;
+                }
+            }
+            break;
     }
 
 #ifdef CONSOLE_ENABLE
