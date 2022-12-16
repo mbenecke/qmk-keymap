@@ -1,6 +1,6 @@
 BOOTMAGIC_ENABLE = no       # Enable Bootmagic Lite
 EXTRAKEY_ENABLE = yes       # Audio control and System control
-CONSOLE_ENABLE = no         # Console for debug
+CONSOLE_ENABLE = yes         # Console for debug
 COMMAND_ENABLE = yes        # Commands for debug and configuration
 NKRO_ENABLE = yes           # Nkey Rollover - if this doesn't work, see here: https://github.com/tmk/tmk_keyboard/wiki/FAQ#nkro-doesnt-work
 BACKLIGHT_ENABLE = no       # Enable keyboard backlight functionality
@@ -14,6 +14,7 @@ SLEEP_LED_ENABLE = no       # Breathing sleep LED during USB suspend
 KEY_OVERRIDE_ENABLE = yes
 GERMAN_ENABLE = yes             # Enable Custom US Ansi Keycodes for PC with German set as input language
 
-
 # https://getreuer.info/posts/keyboards/custom-shift-keys/index.html
 SRC += features/custom_shift_keys.c # enable custom shift
+
+SEND_STRING_ENABLE = yes
