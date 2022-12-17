@@ -39,6 +39,7 @@ The `SEND_STRING()` funktion is a bit piky and does not like to send special Key
    as you can see here, the Keyboard sends a `KC_SCLN` to the OS, which then
    interpreted it as character <kbd>ö</kbd> and if you send `LSHIFT + KC_SCLN` it
    is interpreted as <kbd>Ö</kbd>
+
 3. Next is the `send_string_keycodes.h` https://github.com/qmk/qmk_firmware/blob/master/quantum/send_string/send_string_keycodes.h
 
 ```C
@@ -74,9 +75,9 @@ case KC_O:
 I have no Idea if this is a good Practice or even if it will be work in future QMK releases. But for me **it operates fine**, at the moment.
 
 ## Research
-I made some experiments in `send_unicode_string` through the fact that my use case is „no change to the workstation at all“:
+I made some experiments in `send_unicode_string` but it is not possible to use it in my special case:
 - no change in the OS regarding keyboard layout
-- no installation of autohotkey
+- no installation of autohotkey or wincompose.
 - no change to the language of the workstation
 - both target OS (Windows, Linux) are treated similar 
 
@@ -84,7 +85,7 @@ I made some experiments in `send_unicode_string` through the fact that my use ca
 - I like to use the 4 capslook/numlock/… LED’s to signal some state
 - Add a layer for running coding short cuts, like `SEND_STRING("git pull")` or dynamic macros 
 - Add a third layer which is used for Media Keys or browser control
-- I would like to implement also some RGB lights.
+- I would like to implement also some **RGB** lights. 
 
 ## Disclaimer
 
@@ -92,3 +93,7 @@ I made some experiments in `send_unicode_string` through the fact that my use ca
 - That the Keyboard operates in the current state costs me nearly one year of
   gathering knowledge and experience in a wide range of special Skills. If it is
   not running for you after a Weekend of tinkering, don’t give up, it is possible. 
+- it is not a budget solution, yes it is cheaper than buying the (Kinesis
+  Advantage 356)[https://kinesis-ergo.com/keyboards/advantage360/] but only if
+  do not like to count the working hours and frustration days. 
+  So be warned.
