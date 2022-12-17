@@ -32,46 +32,46 @@ The `SEND_STRING()` funktion is a bit piky and does not like to send special Key
 1. First check the keymap_german.h for the character: https://github.com/qmk/qmk_firmware/blob/master/quantum/keymap_extras/keymap_german.h
 2. Lets use for example this
 
-   ```C
+```C
 #define DE_ODIA KC_SCLN // Ö
-   ```
+```
 
    as you can see here, the Keyboard sends a `KC_SCLN` to the OS, which then
    interpreted it as character <kbd>ö</kbd> and if you send `LSHIFT + KC_SCLN` it
    is interpreted as <kbd>Ö</kbd>
-3. Next is the `send_string_keycodes.h` https://github.com/qmk/qmk_firmware/blob/f21443d6a2be8e2068164f0f3646a175ffed2df4/quantum/send_string/send_string_keycodes.h
+3. Next is the `send_string_keycodes.h` https://github.com/qmk/qmk_firmware/blob/master/quantum/send_string/send_string_keycodes.h
 
-   ```C
+```C
 #define X_SCLN X_SEMICOLON
-   ```
+```
    
    as you can read in https://docs.qmk.fm/#/feature_send_string?id=keycodes 
 
-    > All of the keycodes in the Basic Keycode range are supported (as these are
-    > the only ones that will actually be sent to the host), but with an X_
-    > prefix instead of KC_.
+> All of the keycodes in the Basic Keycode range are supported (as these are
+> the only ones that will actually be sent to the host), but with an X_
+> prefix instead of KC_.
     
     
 4. I implemented a Macro in my Keymap this way
 
-        ```C
-        case KC_O:
-            if (record->event.pressed) {
-                // Detect the activation of either shift keys
-                if (mod_state & MOD_MASK_ALT) {
-                    // First temporarily canceling both shifts so that
-                    // shift isn't applied to the KC_DEL keycode
-                    del_mods(MOD_MASK_ALT);
-                    SEND_STRING(SS_TAP(X_SCLN));
-                    // Reapplying modifier state
-                    set_mods(mod_state);
-                    return false;
-                }
-            }
-            break;
-        ```
+```C
+case KC_O:
+  if (record->event.pressed) {
+    // Detect the activation of either shift keys
+    if (mod_state & MOD_MASK_ALT) {
+       // First temporarily canceling both shifts so that
+       // shift isn't applied to the KC_DEL keycode
+       del_mods(MOD_MASK_ALT);
+       SEND_STRING(SS_TAP(X_SCLN));
+       // Reapplying modifier state
+       set_mods(mod_state);
+       return false;
+       }
+    }
+    break;
+```
         
-    I have no Idea if this is a best Practice, or even if it will be work in future QMK releases. But for me it operates fine, at the moment.
+I have no Idea if this is a good Practice or even if it will be work in future QMK releases. But for me **it operates fine**, at the moment.
 
 ## Research
 I made some experiments in `send_unicode_string` through the fact that my use case is „no change to the workstation at all“:
