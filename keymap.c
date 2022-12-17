@@ -221,6 +221,63 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             break;
+
+        case KC_A:
+            if (record->event.pressed) {
+                // Detect the activation of either shift keys
+                if (mod_state & MOD_MASK_ALT) {
+                    // First temporarily canceling both shifts so that
+                    // shift isn't applied to the KC_DEL keycode
+                    del_mods(MOD_MASK_ALT);
+                    SEND_STRING(SS_TAP(X_QUOT));
+                    // Reapplying modifier state
+                    set_mods(mod_state);
+                    return false;
+                }
+            }
+            break;
+        case KC_O:
+            if (record->event.pressed) {
+                // Detect the activation of either shift keys
+                if (mod_state & MOD_MASK_ALT) {
+                    // First temporarily canceling both shifts so that
+                    // shift isn't applied to the KC_DEL keycode
+                    del_mods(MOD_MASK_ALT);
+                    SEND_STRING(SS_TAP(X_SCLN));
+                    // Reapplying modifier state
+                    set_mods(mod_state);
+                    return false;
+                }
+            }
+            break;
+        case KC_U:
+            if (record->event.pressed) {
+                // Detect the activation of either shift keys
+                if (mod_state & MOD_MASK_ALT) {
+                    // First temporarily canceling both shifts so that
+                    // shift isn't applied to the KC_DEL keycode
+                    del_mods(MOD_MASK_ALT);
+                    SEND_STRING(SS_TAP(X_LBRC));
+                    // Reapplying modifier state
+                    set_mods(mod_state);
+                    return false;
+                }
+            }
+            break;
+        case KC_S:
+            if (record->event.pressed) {
+                // Detect the activation of either shift keys
+                if (mod_state & MOD_MASK_ALT) {
+                    // First temporarily canceling both shifts so that
+                    // shift isn't applied to the KC_DEL keycode
+                    del_mods(MOD_MASK_ALT);
+                    SEND_STRING(SS_TAP(X_MINS));
+                    // Reapplying modifier state
+                    set_mods(mod_state);
+                    return false;
+                }
+                break;
+            }
     }
     return true;
 };
