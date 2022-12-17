@@ -20,7 +20,7 @@
 
 uint8_t mod_state;
 
-enum custom_keycodes { MB_LBRC = SAFE_RANGE, MB_RBRC, MB_SCLN, MB_PLEQ };
+enum custom_keycodes { MB_LBRC = SAFE_RANGE, MB_RBRC, MB_SCLN, MB_PLEQ, MB_SLASH };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // Store the current modifier state in the variable for later reference
@@ -172,17 +172,31 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             break;
+
+        case MB_SLASH:
+            if (record->event.pressed) {
+                // Detect the activation of either shift keys
+                if (mod_state & MOD_MASK_SHIFT) {
+                    // First temporarily canceling both shifts so that
+                    // shift isn't applied to the KC_DEL keycode
+                    del_mods(MOD_MASK_SHIFT);
+                    SEND_STRING("?");
+                    // Reapplying modifier state
+                    set_mods(mod_state);
+                    return false;
+                } else {
+                    SEND_STRING("/");
+                }
+            }
+            break;
     }
 
-#ifdef CONSOLE_ENABLE
-    uprintf("KL: kc: 0x%04X, col: %u, row: %u, pressed: %b, time: %u, interrupt: %b, count: % u\n ", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
-#endif
     return true;
 };
 
 #define DVORAK 0 // Base Dvorak
 #define QWERTZ 2 // qwertz
 
-const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {[DVORAK] = LAYOUT(KC_EQL, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, DE_TILD, KC_1, KC_2, KC_3, KC_4, KC_5, KC_TAB, KC_QUOT, KC_COMM, KC_DOT, KC_P, DE_Y, KC_ESC, KC_A, KC_O, KC_E, KC_U, KC_I, KC_LSFT, MB_SCLN, KC_Q, KC_J, KC_K, KC_X, KC_GRV, KC_INS, KC_LEFT, KC_RGHT, KC_LCTL, KC_LALT, TO(QWERTZ), KC_BSPC, KC_DEL, KC_END, KC_F9, KC_F10, KC_F11, KC_F12, KC_PSCR, KC_SLCK, KC_PAUS, KC_NO, RESET, KC_6, KC_7, KC_8, KC_9, KC_0, MB_PLEQ, KC_F, KC_G, KC_C, KC_R, KC_L, KC_SLSH, KC_D, KC_H, KC_T, KC_N, KC_S, DE_MINS, KC_B, KC_M, KC_W, KC_V, DE_Z, KC_RSFT, KC_UP, KC_DOWN, MB_LBRC, MB_RBRC, KC_LWIN, KC_RALT, KC_PGUP, KC_PGDN, KC_ENTER, KC_SPC),
+const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {[DVORAK] = LAYOUT(KC_EQL, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, DE_TILD, KC_1, KC_2, KC_3, KC_4, KC_5, KC_TAB, KC_QUOT, KC_COMM, KC_DOT, KC_P, DE_Y, KC_ESC, KC_A, KC_O, KC_E, KC_U, KC_I, KC_LSFT, MB_SCLN, KC_Q, KC_J, KC_K, KC_X, KC_GRV, KC_INS, KC_LEFT, KC_RGHT, KC_LCTL, KC_LALT, TO(QWERTZ), KC_BSPC, KC_DEL, KC_END, KC_F9, KC_F10, KC_F11, KC_F12, KC_PSCR, KC_SCROLL_LOCK, KC_PAUS, KC_NO, QK_BOOT, KC_6, KC_7, KC_8, KC_9, KC_0, MB_PLEQ, KC_F, KC_G, KC_C, KC_R, KC_L, MB_SLASH, KC_D, KC_H, KC_T, KC_N, KC_S, DE_MINS, KC_B, KC_M, KC_W, KC_V, DE_Z, KC_RSFT, KC_UP, KC_DOWN, MB_LBRC, MB_RBRC, KC_LWIN, KC_RALT, KC_PGUP, KC_PGDN, KC_ENTER, KC_SPC),
 
-                                                              [QWERTZ] = LAYOUT(KC_DEL, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_EQL, KC_1, KC_2, KC_3, KC_4, KC_5, KC_TAB, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_ESCAPE, KC_A, KC_S, KC_D, KC_F, KC_G, KC_LSFT, DE_Y, KC_X, KC_C, KC_V, KC_B, KC_GRV, KC_INS, KC_LEFT, KC_RGHT, KC_LCTL, KC_LALT, TO(DVORAK), KC_BSPC, KC_DEL, KC_END, KC_F9, KC_F10, KC_F11, KC_F12, KC_PSCR, KC_SLCK, KC_PAUS, KC_NO, RESET, KC_6, KC_7, KC_8, KC_9, KC_0, KC_MINS, DE_Z, KC_U, KC_I, KC_O, KC_P, KC_BSLS, KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_QUOT, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RSFT, KC_UP, KC_DOWN, KC_LBRC, KC_RBRC, KC_LWIN, KC_RALT, KC_PGUP, KC_PGDN, KC_ENTER, KC_SPC)};
+                                                              [QWERTZ] = LAYOUT(KC_DEL, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_EQL, KC_1, KC_2, KC_3, KC_4, KC_5, KC_TAB, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_ESCAPE, KC_A, KC_S, KC_D, KC_F, KC_G, KC_LSFT, DE_Y, KC_X, KC_C, KC_V, KC_B, KC_GRV, KC_INS, KC_LEFT, KC_RGHT, KC_LCTL, KC_LALT, TO(DVORAK), KC_BSPC, KC_DEL, KC_END, KC_F9, KC_F10, KC_F11, KC_F12, KC_PSCR, KC_SCROLL_LOCK, KC_PAUS, KC_NO, QK_BOOT, KC_6, KC_7, KC_8, KC_9, KC_0, KC_MINS, DE_Z, KC_U, KC_I, KC_O, KC_P, KC_BSLS, KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_QUOT, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RSFT, KC_UP, KC_DOWN, KC_LBRC, KC_RBRC, KC_LWIN, KC_RALT, KC_PGUP, KC_PGDN, KC_ENTER, KC_SPC)};
