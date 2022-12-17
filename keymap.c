@@ -278,6 +278,34 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
                 break;
             }
+        case KC_COMM:
+            if (record->event.pressed) {
+                // Detect the activation of either shift keys
+                if (mod_state & MOD_MASK_SHIFT) {
+                    // First temporarily canceling both shifts so that
+                    // shift isn't applied to the KC_DEL keycode
+                    del_mods(MOD_MASK_SHIFT);
+                    SEND_STRING(SS_TAP(X_NUBS));
+                    // Reapplying modifier state
+                    set_mods(mod_state);
+                    return false;
+                }
+            }
+            break;
+        case KC_DOT:
+            if (record->event.pressed) {
+                // Detect the activation of either shift keys
+                if (mod_state & MOD_MASK_SHIFT) {
+                    // First temporarily canceling both shifts so that
+                    // shift isn't applied to the KC_DEL keycode
+                    del_mods(MOD_MASK_SHIFT);
+                    SEND_STRING(SS_LSFT(SS_TAP(X_NUBS)));
+                    // Reapplying modifier state
+                    set_mods(mod_state);
+                    return false;
+                }
+            }
+            break;
     }
     return true;
 };
