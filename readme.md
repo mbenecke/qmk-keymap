@@ -21,16 +21,18 @@ To build with the default keymap, run `make kinesis/mbenecke` while in the QMK d
 
 ### Documentation
 
-The Basic Idea of the Keymap is from here:
-http://arjenvankol.com/img/dvorakie.png Not fully implemented, cause I am too
-lazy. I am a German (natural speaker) I need only this
-https://kbdlayout.info/kbdgr Layout.
+The Basic Idea of the Keymap is from [Arjen van
+Kol](http://arjenvankol.com/img/dvorakie.png) Not fully implemented in this
+keymap, cause I am too lazy. I am a German (native) I need only this
+[Layout](https://kbdlayout.info/kbdgr ).
 
-The `SEND_STRING()` funktion is a bit piky and does not like to send special Keymaps, to implement a german Umlaut I used this Workflow:
+### How to get German Umlauts in QMK 
+
+The `SEND_STRING()` funktion is a bit piky and does not like to send special Keymaps, to implement a german Umlaut. I used this Workflow:
 1. First check the keymap_german.h for the character: https://github.com/qmk/qmk_firmware/blob/master/quantum/keymap_extras/keymap_german.h
 2. Lets use for example this
 
-   ``` c#   
+   ```C
 #define DE_ODIA KC_SCLN // Ö
    ```
 
@@ -39,18 +41,20 @@ The `SEND_STRING()` funktion is a bit piky and does not like to send special Key
    is interpreted as <kbd>Ö</kbd>
 3. Next is the `send_string_keycodes.h` https://github.com/qmk/qmk_firmware/blob/f21443d6a2be8e2068164f0f3646a175ffed2df4/quantum/send_string/send_string_keycodes.h
 
-   ``` c#   
+   ```C
 #define X_SCLN X_SEMICOLON
    ```
    
    as you can read in https://docs.qmk.fm/#/feature_send_string?id=keycodes 
 
-    > All of the keycodes in the Basic Keycode range are supported (as these are the only ones that will actually be sent to the host), but with an X_ prefix instead of KC_.
+    > All of the keycodes in the Basic Keycode range are supported (as these are
+    > the only ones that will actually be sent to the host), but with an X_
+    > prefix instead of KC_.
     
     
 4. I implemented a Macro in my Keymap this way
 
-        ``` c#
+        ```C
         case KC_O:
             if (record->event.pressed) {
                 // Detect the activation of either shift keys
